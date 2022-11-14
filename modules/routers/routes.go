@@ -3,6 +3,7 @@ package routers
 import (
 	"howToUseMod/modules/users"
 	"howToUseMod/modules/users/UserController"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -20,11 +21,12 @@ func Main() {
 	})
 	userRoutes.POST("/create", func(c *gin.Context) {
 		var user users.User
-		// user.Name = c.PostForm("name")
-		// user.Email = c.PostForm("email")
-		user.Name = "これが名前"
-		user.Email = "test@test.com"
-		user.Create()
+		user.Name = c.PostForm("name")
+		user.Email = c.PostForm("email")
+		err := user.Create()
+		if err != nil {
+			log.Fatalln(err)
+		}
 		c.String(http.StatusOK, "ユーザーの作成に成功しました")
 	})
 	r.Run()
